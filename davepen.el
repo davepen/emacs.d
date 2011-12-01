@@ -13,7 +13,11 @@
 
 (set-register ?p '(file . "~/Dropbox/org/personal.org"))
 
-(set-default-font "-apple-Andale_Mono-medium-normal-normal-*-14-*-*-*-m-0-iso10646-1")
+(if (eq system-type 'darwin)
+    (set-default-font "-apple-Andale_Mono-medium-normal-normal-*-14-*-*-*-m-0-iso10646-1"))
+
+
+
 (modify-frame-parameters nil '((wait-for-wm . nil)))
 
 (if (fboundp 'scroll-bar-mode)
