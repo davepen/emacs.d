@@ -13,3 +13,11 @@
 (dolist (p my-packages)
   (when (not (package-installed-p p))
     (package-install p)))
+
+(setq dotfiles-dir (file-name-directory
+                    (or (buffer-file-name) load-file-name)))
+(add-to-list 'load-path dotfiles-dir)
+
+(require 'global)
+(require 'scratch-backup)
+(require 'bindings)
