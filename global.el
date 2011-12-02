@@ -5,10 +5,14 @@
 (setq scroll-step 1)
 
 ;; cursor does not blink
-(blink-cursor-mode -1)
+(if (fboundp 'blink-cursor-mode)
+    (blink-cursor-mode -1))
 
 ;; we don't need to see the brag screen
 (setq inhibit-splash-screen t)
+
+;; stop creating backup files
+(setq make-backup-files nil)
 
 (setq read-buffer-completion-ignore-case t)
 (setq read-file-name-completion-ignore-case t)
@@ -29,7 +33,10 @@
     (menu-bar-mode -1))
 
 ;; replace the yes or no prompt with y or n
-;;
 (fset 'yes-or-no-p 'y-or-n-p)
+
+;; start in full-screen mode
+(if (fboundp 'ns-toggle-fullscreen)
+    (ns-toggle-fullscreen))
 
 (provide 'global)
