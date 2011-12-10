@@ -11,12 +11,23 @@
 
 (modify-frame-parameters nil '((wait-for-wm . nil)))
 
-(add-to-list 'load-path "~/.emacs.d/color-theme-6.6.0")
-(require 'color-theme)
-(eval-after-load "color-theme"
-  '(progn
-     (color-theme-initialize)
-     (color-theme-charcoal-black)))
+
+;;
+;; this works load the solarized theme for emacs 24. no need
+;; to load color-theme. M-x load-theme solarized-dark
+;;
+;;(add-to-list 'load-path "~/.emacs.d/elpa/color-theme-solarized-20111121/")
+;; (add-to-list 'custom-theme-load-path
+;;             "~/.emacs.d/elpa/color-theme-solarized-20111121/")
+
+;; my color-theme-6.6.0 has color-theme-charcoal-black
+;;(add-to-list 'load-path "~/.emacs.d/color-theme-6.6.0")
+;; (require 'color-theme)
+;; (eval-after-load "color-theme"
+;;   '(progn
+;;      (color-theme-initialize)
+;;      (color-theme-charcoal-black)
+;;      ))
 
 ;; turn off hl line mode from esk
 (remove-hook 'prog-mode-hook 'esk-turn-on-hl-line-mode)
