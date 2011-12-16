@@ -52,7 +52,7 @@ This is the same as using \\[set-mark-command] with the prefix argument."
 ;; The following lines are always needed.  Choose your own keys.
 (add-to-list 'auto-mode-alist '("\\.org\\'" . org-mode))
 
-(setq org-export-html-xml-declaration 
+(setq org-export-html-xml-declaration
       (quote (("html" . "")
               ("was-html" . "<?xml version=\"1.0\" encoding=\"%s\"?>")
               ("php" . "<?php echo \"<?xml version=\\\"1.0\\\" encoding=\\\"%s\\\" ?>\"; ?>"))))
@@ -65,12 +65,12 @@ This is the same as using \\[set-mark-command] with the prefix argument."
       (occur (if isearch-regexp isearch-string (regexp-quote isearch-string))))))
 
 (defun my-add-path (path-element)
- "Add the specified path element to the Emacs PATH"
+  "Add the specified path element to the Emacs PATH"
   (interactive "Enter directory to be added to path: ")
   (if (file-directory-p path-element)
-    (setenv "PATH"
-       (concat (expand-file-name path-element)
-               path-separator (getenv "PATH")))))
+      (setenv "PATH"
+              (concat (expand-file-name path-element)
+                      path-separator (getenv "PATH")))))
 
 (defun prelude-open-with ()
   "Simple function that allows us to open the underlying
@@ -88,12 +88,12 @@ file of a buffer in an external program."
   "Untabifies the whole buffer"
   (interactive)
   (untabify (point-min) (point-max)))
- 
+
 (defun twb ()
   "Tabifies the whole buffer"
   (interactive)
   (tabify (point-min) (point-max)))
- 
+
 (defun eval-and-replace ()
   "Replace the preceding sexp with its value."
   (interactive)
@@ -104,7 +104,7 @@ file of a buffer in an external program."
     (error (message "Invalid expression")
            (insert (current-kill 0)))))
 (global-set-key (kbd "C-c e") 'eval-and-replace)
- 
+
 (defun shell-current-directory ()
   "Opens a shell in the current directory"
   (interactive)
@@ -155,7 +155,8 @@ file of a buffer in an external program."
 (global-set-key (kbd "C-c r") 'rename-file-and-buffer)
 
 (defun comment-or-uncomment-current-line-or-region ()
-  "Comments or uncomments current current line or whole lines in region."
+  "Comments or uncomments current current line or whole lines in
+region."
   (interactive)
   (save-excursion
     (let (min max)
@@ -168,7 +169,8 @@ file of a buffer in an external program."
 (global-set-key (kbd "C-7") 'comment-or-uncomment-current-line-or-region)
 
 (defun insert-date()
-  "Insert a time-stamp according to locale's date and time format."
+  "Insert a time-stamp according to locale's date and time
+format."
   (interactive)
   (insert (format-time-string "%a, %e %b %Y, %k:%M" (current-time))))
 (global-set-key "\C-cd" 'insert-date)
@@ -177,4 +179,27 @@ file of a buffer in an external program."
   "Insert a org mode html br"
   (interactive)
   (insert "#+BEGIN_HTML<br><br>#+END_HTML"))
-(global-set-key "\C-cw" 'insert-html-break)
+(global-set-key "\C-c w" 'insert-html-break)
+
+(defun find-nearest-color (color &optional use-hsv)
+  "Finds the nearest color by RGB distance to `color'. If called
+with a universal argument (or if `use-hsv' is set) use HSV
+instead of RGB. Runs \\[list-colors-display] after setting
+`list-colors-sort'"
+  (interactive "sColor: \nP")
+  (let ((list-colors-sort `(,(if (or use-hsv current-prefix-arg)
+                                'hsv-dist
+                               'rgb-dist) . ,color)))
+    (if (color-defined-p color)
+        (list-colors-display)
+      (error "The color \"%s\" does not exist." color))))
+
+ (defun find-nearest-color-at-point (pt)
+  "Finds the nearest color at point `pt'. If called
+interactively, `pt' is the value immediately under `point'."
+  (interactive "d")
+  (find-nearest-color (with-syntax-table (copy-syntax-table (syntax-table))
+                        ;; turn `#' into a word constituent to help
+                        ;; `thing-at-point' find HTML color codes.
+                        (modify-syntax-entry ?# "w")
+                        (thing-at-point 'word))))
