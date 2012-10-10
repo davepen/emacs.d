@@ -8,4 +8,6 @@
 (global-set-key (kbd "C-c a") 'apropos)
 (global-set-key (kbd "C-c v") 'visual-line-mode)
 
+(global-set-key (kbd "C-=") 'er/expand-region)
+
 (provide 'bindings)

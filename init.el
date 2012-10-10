@@ -2,6 +2,7 @@
 (setq package-archives
       '(("ELPA" . "http://tromey.com/elpa/") 
 	("gnu" . "http://elpa.gnu.org/packages/")
+        ("melpa" . "http://melpa.milkbox.net/packages/")
 	("marmalade" . "http://marmalade-repo.org/packages/")))
 (package-initialize)
 
@@ -24,7 +25,7 @@
 (add-to-list 'load-path dotfiles-dir)
 
 (require 'global)
-(require 'scratch-backup)
+;;(require 'scratch-backup)
 (require 'bindings)
 
 (load-theme 'solarized-dark t)
