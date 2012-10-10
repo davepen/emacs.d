@@ -11,7 +11,6 @@
 
 (modify-frame-parameters nil '((wait-for-wm . nil)))
 
-
 ;;
 ;; this works load the solarized theme for emacs 24. no need
 ;; to load color-theme. M-x load-theme solarized-dark
@@ -202,12 +201,9 @@ interactively, `pt' is the value immediately under `point'."
                         (modify-syntax-entry ?# "w")
                         (thing-at-point 'word))))
 
-
-
 (defun my-shell-hook ()
   (local-set-key (quote [(return)]) (quote newline))
   (local-set-key (quote [(control return)]) (quote comint-send-input))
   (local-set-key (kbd "M-i")  'my-unindent)
   (local-set-key (kbd "C-i")  'indent-or-complete))
-
 (add-hook 'shell-mode-hook 'my-shell-hook)
