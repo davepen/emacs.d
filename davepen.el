@@ -46,6 +46,12 @@ This is the same as using \\[set-mark-command] with the prefix argument."
       (quote (("html" . "")
               ("was-html" . "<?xml version=\"1.0\" encoding=\"%s\"?>")
               ("php" . "<?php echo \"<?xml version=\\\"1.0\\\" encoding=\\\"%s\\\" ?>\"; ?>"))))
+
+;; strike thru for DONE tasks
+;;(setq org-fontify-done-headline t)
+;;(set-face-attribute ‘org-done nil :strike-through t)
+;;(set-face-attribute ‘org-headline-done nil :strike-through t)
+
 ;;
 ;; fontification for whatever language you’re using. This is
 ;; especially nice when you open an editing buffer with Ctrl+c ' to
@@ -191,7 +197,7 @@ instead of RGB. Runs \\[list-colors-display] after setting
         (list-colors-display)
       (error "The color \"%s\" does not exist." color))))
 
- (defun find-nearest-color-at-point (pt)
+(defun find-nearest-color-at-point (pt)
   "Finds the nearest color at point `pt'. If called
 interactively, `pt' is the value immediately under `point'."
   (interactive "d")
@@ -201,9 +207,44 @@ interactively, `pt' is the value immediately under `point'."
                         (modify-syntax-entry ?# "w")
                         (thing-at-point 'word))))
 
-(defun my-shell-hook ()
+(defun my-shell-hook()
   (local-set-key (quote [(return)]) (quote newline))
   (local-set-key (quote [(control return)]) (quote comint-send-input))
   (local-set-key (kbd "M-i")  'my-unindent)
   (local-set-key (kbd "C-i")  'indent-or-complete))
 (add-hook 'shell-mode-hook 'my-shell-hook)
+
+(defun visit-term-buffer()
+  "Create or visit a terminal buffer."
+  (interactive)
+  (if (not (get-buffer "*ansi-term*"))
+      (progn
+        (split-window-sensibly (selected-window))
+        (other-window 1)
+        (ansi-term (getenv "SHELL")))
+    (switch-to-buffer-other-window "*ansi-term*")))
+(global-set-key (kbd "C-c t") 'visit-term-buffer)
+
+;; always take me to the previous window, no matter how many windows
+;; are currently present.
+(global-set-key (kbd "C-x O") (lambda ()
+                                (interactive)
+                                (other-window -1)))
+
+(defun kill-other-buffers ()
+  "Kill all buffers but the current one.
+Don't mess with special buffers."
+  (interactive)
+  (dolist (buffer (buffer-list))
+    (unless (or (eql buffer (current-buffer)) (not (buffer-file-name buffer)))
+      (kill-buffer buffer))))
+
+(defun google()
+  "Google the selected region if any, display a query prompt otherwise."
+  (interactive)
+  (browse-url
+   (concat
+    "http://www.google.com/search?ie=utf-8&oe=utf-8&q="
+    (url-hexify-string (if mark-active
+         (buffer-substring (region-beginning) (region-end))
+       (read-string "Google: "))))))
