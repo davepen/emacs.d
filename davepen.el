@@ -246,5 +246,20 @@ Don't mess with special buffers."
    (concat
     "http://www.google.com/search?ie=utf-8&oe=utf-8&q="
     (url-hexify-string (if mark-active
-         (buffer-substring (region-beginning) (region-end))
-       (read-string "Google: "))))))
+                           (buffer-substring (region-beginning) (region-end))
+                         (read-string "Google: "))))))
+;;(global-set-key (kbd "C-c g") 'google)
+
+(defun youtube ()
+  "Search YouTube with a query or region if any."
+  (interactive)
+  (browse-url
+   (concat
+    "http://www.youtube.com/results?search_query="
+    (url-hexify-string (if mark-active
+                           (buffer-substring (region-beginning) (region-end))
+                         (read-string "Search YouTube: "))))))
+;;(global-set-key (kbd "C-c y") 'youtube)
+
+
+

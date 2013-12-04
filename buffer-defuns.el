@@ -8,6 +8,14 @@ might be bad."
   (set-buffer-file-coding-system 'utf-8))
 ;; Various superfluous white-space. Just say no.
 (add-hook 'before-save-hook 'cleanup-buffer-safe)
+(add-hook 'before-save-hook 'whitespace-cleanup)
+;; makefile mode needs tabs so use this mode
+(add-hook 'makefile-mode-hook 'indent-tabs-mode)
+
+;; printing from ibuffer (shift-p) ask first
+(defadvice ibuffer-do-print (before print-buffer-query activate)
+   (unless (y-or-n-p "Print buffer? ")
+     (error "Cancelled")))
 
 (defun cleanup-buffer ()
   "Perform a bunch of operations on the whitespace content of a buffer.
@@ -105,3 +113,49 @@ Including indent-buffer, which should not be called automatically on save."
   (forward-line -1)
   (indent-according-to-mode))
 (global-set-key [(meta shift downf)] 'move-line-down)
+
+(require 'key-chord)
+(key-chord-mode +1)
+(key-chord-define-global "FF" 'find-file)
+;;(key-chord-define-global "jk" 'beginning-of-buffer)
+
+(defun switch-to-previous-buffer ()
+  "Switch to previously open buffer.
+Repeated invocations toggle between the two most recently open buffers."
+  (interactive)
+  (switch-to-buffer (other-buffer (current-buffer) 1)))
+(key-chord-define-global "JJ" 'switch-to-previous-buffer)
+
+(defun rename-file-and-buffer ()
+  "Rename the current buffer and file it is visiting."
+  (interactive)
+  (let ((filename (buffer-file-name)))
+    (if (not (and filename (file-exists-p filename)))
+        (message "Buffer is not visiting a file!")
+      (let ((new-name (read-file-name "New name: " filename)))
+        (cond
+         ((vc-backend filename) (vc-rename-file filename new-name))
+         (t
+          (rename-file filename new-name t)
+          (rename-buffer new-name)
+          (set-visited-file-name new-name)
+          (set-buffer-modified-p nil)))))))
+;; The wrapper is extra smart and will work on files that are not
+;; under version control as well! I’m pretty fond of commands that do
+;; what you mean instead of throwing errors. Now that we have this
+;; neat little command we should probably bind it to some each to
+;; press keys, like C-c r:
+(global-set-key (kbd "C-c r") 'rename-file-and-buffer)
+
+
+(defun eval-and-replace()
+ "Replace the preceding sexp with its value."
+ (interactive)
+ (backward-kill-sexp)
+ (condition-case nil
+ (prin1 (eval (read (current-kill 0)))
+ (current-buffer))
+ (error (message "Invalid expression")
+ (insert (current-kill 0)))))
+;; (global-set-key (kbd "C-c e") 'eval-end-replace)
+

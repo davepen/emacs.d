@@ -28,3 +28,8 @@
 ;; else relies on its erratic behavior. Instead I just remap the
 ;; commands to my home brewed skip-to-next/previous-blank-line. Ahh,
 ;; speedy and predictable navigation once more.
+
+
+;; after deleting a tag, indent properly
+(defadvice sgml-delete-tag (after reindent activate)
+  (indent-region (point-min) (point-max)))

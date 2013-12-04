@@ -17,3 +17,15 @@ With C-u C-u: insert date and time"
   (cond ((equal arg '(4)) (insert (format-time-string "%T")))
         ((equal arg '(16)) (insert (format-time-string "%Y-%m-%d %T")))
         (t (insert (format-time-string "%Y-%m-%d")))))
+
+;; Keep region when undoing in region
+(defadvice undo-tree-undo (around keep-region activate)
+  (if (use-region-p)
+      (let ((m (set-marker (make-marker) (mark)))
+            (p (set-marker (make-marker) (point))))
+        ad-do-it
+        (goto-char p)
+        (set-mark m)
+        (set-marker p nil)
+        (set-marker m nil))
+    ad-do-it))

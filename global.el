@@ -8,8 +8,14 @@
 (if (fboundp 'blink-cursor-mode)
     (blink-cursor-mode -1))
 
+(require 'paren)
+(setq show-paren-style 'parenthesis)
+(show-paren-mode +1)
+
 ;; indentation when hit return
 (electric-indent-mode 1)
+;;(define-key global-map (kbd "RET") 'newline-and-indent)
+;;(setq-default indent-tabs-mode t)
 
 ;; Auto revert mode looks for changes to files, and updates them for
 ;; you. With these settings, dired buffers are also updated. The last
@@ -56,6 +62,6 @@
 (global-set-key (kbd "M-Z") 'zap-up-to-char)
 
 ;; Here’s how we can enable spell-checking in source code comments:
-(add-hook 'prog-mode-hook 'flyspell-prog-mode)
+;; (add-hook 'prog-mode-hook 'flyspell-prog-mode)
 
 (provide 'global)

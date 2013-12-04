@@ -8,6 +8,8 @@
 (setq-default dired-details-hidden-string "--- ")
 (dired-details-install)
 
+(require 'dired-x)
+
 ;; In dired, M-> and M-< never take me where I want to go. Instead of
 ;; taking me to the very beginning or very end, they now take me to
 ;; the first or last file

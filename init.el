@@ -43,5 +43,6 @@
 (require 'global)
 ;;(require 'scratch-backup)
 (require 'bindings)
+(require 'haxe-mode)
 
 (load-theme 'solarized-dark t)
